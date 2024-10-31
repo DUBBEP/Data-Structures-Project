@@ -10,7 +10,6 @@ public class Invoker
     public void Setcommand(Command commandValue)
     {
         command = commandValue;
-
     }
 
     public void ExcuteCommand()
