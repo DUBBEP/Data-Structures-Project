@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Invoker : MonoBehaviour
 {
-    private bool isRecording;
-    public bool IsRecording { get { return isRecording; } }
     private float recordingTime;
     private float replayStartTime;
+    private bool isRecording;
+    public bool IsRecording { get { return isRecording; } }
 
     void FixedUpdate()
     {
@@ -16,6 +16,7 @@ public class Invoker : MonoBehaviour
     public void ExecuteCommand(Command command)
     {
         command.Execute();
+        Debug.Log("Executed Command: " + command);
 
         if (isRecording)
         {
@@ -24,7 +25,6 @@ public class Invoker : MonoBehaviour
 
             Debug.Log("Recorded Time: " + command.timeStamp);
         }
-        Debug.Log("Executed Command: " + command);
     }
 
     public void StartRecording()
@@ -33,6 +33,7 @@ public class Invoker : MonoBehaviour
         recordingTime = 0.0f;
         isRecording = true;
     }
+
     public void StopRecording()
     {
         isRecording = false;

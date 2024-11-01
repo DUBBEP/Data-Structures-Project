@@ -2,10 +2,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 public class InputHandler : MonoBehaviour
 {
-    Invoker invoker;
     [SerializeField]
     PlayerMovement player;
+    
     Replay replay;
+    Invoker invoker;
 
 
     private void Start()
@@ -13,6 +14,7 @@ public class InputHandler : MonoBehaviour
         replay = this.AddComponent<Replay>();
         invoker = this.AddComponent<Invoker>();
     }
+
     void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.A))
@@ -30,15 +32,8 @@ public class InputHandler : MonoBehaviour
             ToggleRecording();
         
         if (Input.GetKeyDown(KeyCode.P))
-            RunReplay();
+            replay.StartReplay(player);
     }
-
-    void RunReplay()
-    {
-        replay.StartReplay(player);
-        GameUI.instance.SetReplayStatusText("Replaying");
-    }
-
 
     void ToggleRecording()
     {
@@ -48,8 +43,8 @@ public class InputHandler : MonoBehaviour
         if (!invoker.IsRecording)
         {
             invoker.StartRecording();
-            GameUI.instance.SetReplayStatusText("Recording");
             Debug.Log("Recording Started");
+            GameUI.instance.SetReplayStatusText("Recording");
         }
         else
         {

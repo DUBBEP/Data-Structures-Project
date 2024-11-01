@@ -18,6 +18,7 @@ public class Replay : MonoBehaviour
 
     public void StartReplay(PlayerMovement target)
     {
+        GameUI.instance.SetReplayStatusText("Replaying");
         isReplaying = true;
         replayTarget = target;
     }
