@@ -8,6 +8,11 @@ public class InputHandler : MonoBehaviour
     Replay replay;
     Invoker invoker;
 
+    public delegate void MakeClone(Replay replay);
+    public static event MakeClone OnMakeClone;
+
+    public delegate void StartRecording(Vector3 position);
+    public static event StartRecording OnStartRecording;
 
     private void Start()
     {
@@ -30,9 +35,9 @@ public class InputHandler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
             ToggleRecording();
-        
-        if (Input.GetKeyDown(KeyCode.P))
-            replay.StartReplay(player);
+
+        if (Input.GetKeyDown(KeyCode.P) && CommandLog.recordedCommands.Count > 0)
+            OnMakeClone?.Invoke(replay);
     }
 
     void ToggleRecording()
@@ -42,6 +47,7 @@ public class InputHandler : MonoBehaviour
 
         if (!invoker.IsRecording)
         {
+            OnStartRecording?.Invoke(player.transform.position);
             invoker.StartRecording();
             Debug.Log("Recording Started");
             GameUI.instance.SetReplayStatusText("Recording");
