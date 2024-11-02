@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CloneManager : MonoBehaviour
@@ -8,27 +6,30 @@ public class CloneManager : MonoBehaviour
     private GameObject PlayerPrefab;
 
     private Vector3 recordingStartPos;
+    private Vector2 recordingStartVelocity;
 
     void OnEnable()
     {
         InputHandler.OnMakeClone += CreateNewClone;
-        InputHandler.OnStartRecording += SetStartPosition;
+        InputHandler.OnStartRecording += SetStartInformation;
     }
 
     void OnDisable()
     {
         InputHandler.OnMakeClone -= CreateNewClone;
-        InputHandler.OnStartRecording -= SetStartPosition;
+        InputHandler.OnStartRecording -= SetStartInformation;
     }
 
 
-    void SetStartPosition(Vector3 startPos)
+    void SetStartInformation(PlayerMovement originalPlayer)
     {
-        recordingStartPos = startPos;
+        recordingStartPos = originalPlayer.transform.position;
+        recordingStartVelocity = originalPlayer.rb.velocity;
     }
     void CreateNewClone(Replay replay)
     {
         PlayerMovement playerClone = Instantiate(PlayerPrefab, recordingStartPos, Quaternion.identity).GetComponent<PlayerMovement>();
+        playerClone.rb.velocity = recordingStartVelocity;
         replay.StartReplay(playerClone);
     }
 }

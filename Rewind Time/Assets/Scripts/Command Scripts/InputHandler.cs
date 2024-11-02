@@ -11,7 +11,7 @@ public class InputHandler : MonoBehaviour
     public delegate void MakeClone(Replay replay);
     public static event MakeClone OnMakeClone;
 
-    public delegate void StartRecording(Vector3 position);
+    public delegate void StartRecording(PlayerMovement player);
     public static event StartRecording OnStartRecording;
 
     private void Start()
@@ -47,7 +47,7 @@ public class InputHandler : MonoBehaviour
 
         if (!invoker.IsRecording)
         {
-            OnStartRecording?.Invoke(player.transform.position);
+            OnStartRecording?.Invoke(player);
             invoker.StartRecording();
             Debug.Log("Recording Started");
             GameUI.instance.SetReplayStatusText("Recording");

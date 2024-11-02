@@ -21,6 +21,7 @@ public class Replay : MonoBehaviour
         GameUI.instance.SetReplayStatusText("Replaying");
         isReplaying = true;
         replayTarget = target;
+        replayTime = 0;
     }
 
     private void RunReplay()
@@ -32,6 +33,8 @@ public class Replay : MonoBehaviour
         if (CommandLog.recordedCommands.Count > 0 )
         {
             Command command = CommandLog.recordedCommands.Peek();
+
+            Debug.Log("Command Time Stamp: " + command.timeStamp + " VS ReplayTime: " + replayTime);
             if (replayTime >= command.timeStamp)
             {
                 CommandLog.recordedCommands.Dequeue();

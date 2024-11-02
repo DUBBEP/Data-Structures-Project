@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+
+
     [SerializeField]
     private float sidewaysForce;
     [SerializeField]
@@ -9,39 +11,49 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float jumpForce;
     [SerializeField]
-    private float fallSpeed;
+    private float fallGravity;
+    [SerializeField]
+    private float airGravity;
+    [SerializeField] 
+    private float groundGravity;
 
-    private float xVelocity;
+
+    [SerializeField]
+    private Transform GroundCheckPos;
 
     private bool isFalling;
     private bool atMaxSpeed;
+    private bool isGrounded;
 
-    private Rigidbody2D rb;
+    private float yVelocity;
 
-    private void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
+    public Rigidbody2D rb;
 
     void FixedUpdate()
     {
-        if (isFalling)
-            rb.AddForce(Vector3.down * fallSpeed);
+        if (isGrounded)
+            rb.AddForce(Vector3.down * groundGravity);
+        else if (isFalling)
+            rb.AddForce(Vector3.down * fallGravity);
         else
-            rb.AddForce(Vector3.down * (fallSpeed / 2));
+            rb.AddForce(Vector3.down * airGravity);
     }
+
     void Update()
     {
-        xVelocity = rb.velocity.x;
         if (rb.velocity.y < 0 && GroundCheck())
-            isFalling = true;
-        else 
+        {
             isFalling = false;
-
-        if (Mathf.Abs(rb.velocity.x) > maxSpeed)
-            atMaxSpeed = true;
+            isGrounded = true;
+            rb.velocity.Set(rb.velocity.x, 0);
+        }
         else
-            atMaxSpeed = false;
+        {
+            isFalling = (rb.velocity.y >= 0) ? false : true;
+            isGrounded = (GroundCheck()) ? true : false;
+        }
+
+        atMaxSpeed = (Mathf.Abs(rb.velocity.x) > maxSpeed) ? true : false;
     }
 
 
@@ -56,7 +68,6 @@ public class PlayerMovement : MonoBehaviour
             if (rb.velocity.x > 0)
                 if (direction == Direction.left)
                     rb.AddForce(sidewaysForce * Vector2.left, 0);
-
             return;
         }
 
@@ -68,16 +79,25 @@ public class PlayerMovement : MonoBehaviour
 
     public void TryJump()
     {
-        if (!GroundCheck())
+        if (GroundCheck())
         {
+            rb.velocity.Set(rb.velocity.x, 0);
             rb.AddForce(jumpForce * Vector2.up, ForceMode2D.Impulse);
             isFalling = false;
+            isGrounded = false;
+        }
+        else
+        {
+            isGrounded = false;
+            
+            if (rb.velocity.x < 0)
+                isFalling = true;
         }
     }
+
     bool GroundCheck()
     {
-        Ray ray = new Ray(new Vector3(transform.position.x, transform.position.y - 0.51f, transform.position.z), Vector3.down * 0.2f);
-        if (Physics.Raycast(ray))
+        if (Physics2D.Raycast(new Vector2(GroundCheckPos.position.x, GroundCheckPos.position.y), Vector2.down, 0.2f))
             return true;
         else
             return false;
