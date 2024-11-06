@@ -43,9 +43,7 @@ public class GameManager : MonoBehaviour
             Invoker invoker = new Invoker();
             invoker.disableLog = true;
             invoker.Setcommand(command);
-
             Debug.Log(command.ToString() + " " + command.timeStamp);
-            
             invoker.ExcuteCommand();
         }
     }
