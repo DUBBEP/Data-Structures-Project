@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -24,10 +25,17 @@ public class PlayerMovement : MonoBehaviour
     private bool isFalling;
     private bool atMaxSpeed;
     private bool isGrounded;
-
+    private bool ridingPlayer;
+    private bool pauseMount;
     private float yVelocity;
 
+    public GameObject cloneOverlay;
     public Rigidbody2D rb;
+    private Transform targetMountTransform;
+
+    private Vector3 offset = new Vector3(0, 1.1f, 0);
+
+
 
     void FixedUpdate()
     {
@@ -41,6 +49,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (ridingPlayer)
+        {
+            transform.position = targetMountTransform.position + offset;
+            return;
+        }
+
         if (rb.velocity.y < 0 && GroundCheck())
         {
             isFalling = false;
@@ -53,12 +67,19 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = (GroundCheck()) ? true : false;
         }
 
+
+
         atMaxSpeed = (Mathf.Abs(rb.velocity.x) > maxSpeed) ? true : false;
     }
 
 
     public void Move(Direction direction)
     {
+        if (ridingPlayer)
+        {
+            return;
+        }
+
         if (atMaxSpeed)
         {
             if (rb.velocity.x < 0)
@@ -79,12 +100,21 @@ public class PlayerMovement : MonoBehaviour
 
     public void TryJump()
     {
+        if (ridingPlayer)
+        {
+            ridingPlayer = false;
+            rb.isKinematic = false;
+            targetMountTransform = null;
+
+            DoJump();
+
+            StartCoroutine(PauseMount());
+            return;
+        }
+        
         if (GroundCheck())
         {
-            rb.velocity.Set(rb.velocity.x, 0);
-            rb.AddForce(jumpForce * Vector2.up, ForceMode2D.Impulse);
-            isFalling = false;
-            isGrounded = false;
+            DoJump();
         }
         else
         {
@@ -95,11 +125,45 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
     bool GroundCheck()
     {
-        if (Physics2D.Raycast(new Vector2(GroundCheckPos.position.x, GroundCheckPos.position.y), Vector2.down, 0.2f))
+        RaycastHit2D hit = Physics2D.Raycast(new Vector2(GroundCheckPos.position.x, GroundCheckPos.position.y), Vector2.down, 0.2f);
+        if (hit)
+        {
+            if (hit.transform.gameObject.CompareTag("Player"))
+            {
+                MountPlayer(hit.transform.GetComponent<Transform>());
+            }
             return true;
+        }
         else
             return false;
+    }
+
+    void DoJump()
+    {
+        rb.velocity.Set(rb.velocity.x, 0);
+        rb.AddForce(jumpForce * Vector2.up, ForceMode2D.Impulse);
+        isFalling = false;
+        isGrounded = false;
+    }
+
+    void MountPlayer(Transform otherRB)
+    {
+        if (pauseMount)
+            return;
+
+        rb.velocity = Vector2.zero;
+        ridingPlayer = true;
+        rb.isKinematic = true;
+        targetMountTransform = otherRB;
+    }
+
+    IEnumerator PauseMount()
+    {
+        pauseMount = true;
+        yield return new WaitForSeconds(0.1f);
+        pauseMount = false;
     }
 }

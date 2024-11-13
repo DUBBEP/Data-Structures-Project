@@ -30,6 +30,7 @@ public class CloneManager : MonoBehaviour
     {
         PlayerMovement playerClone = Instantiate(PlayerPrefab, recordingStartPos, Quaternion.identity).GetComponent<PlayerMovement>();
         playerClone.rb.velocity = recordingStartVelocity;
+        playerClone.cloneOverlay.SetActive(true);
         replay.StartReplay(playerClone);
     }
 }
