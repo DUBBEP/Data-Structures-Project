@@ -30,7 +30,9 @@ public class Replay : MonoBehaviour
 
         Debug.Log(CommandLog.recordedCommands.Count);
 
-        if (CommandLog.recordedCommands.Count > 0 )
+        bool commandsInQueue = CommandLog.recordedCommands.Count > 0;
+
+        if (commandsInQueue)
         {
             Command command = CommandLog.recordedCommands.Peek();
 
