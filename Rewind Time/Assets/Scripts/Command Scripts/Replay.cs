@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Replay : MonoBehaviour
+public class Replay
 {
     private bool isReplaying;
     public bool IsReplaying { get { return isReplaying; } }

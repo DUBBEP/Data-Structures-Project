@@ -4,7 +4,6 @@ public class InputHandler : MonoBehaviour
 {
     [SerializeField]
     PlayerMovement player;
-    
     Replay replay;
     Invoker invoker;
 
@@ -16,8 +15,8 @@ public class InputHandler : MonoBehaviour
 
     private void Start()
     {
-        replay = this.AddComponent<Replay>();
-        invoker = this.AddComponent<Invoker>();
+        replay = new();
+        invoker = new();
     }
 
     void FixedUpdate()
@@ -27,7 +26,6 @@ public class InputHandler : MonoBehaviour
         else if (Input.GetKey(KeyCode.D))
             invoker.ExecuteCommand(new MoveRight(player));
     }
-
 
 
     void Update()

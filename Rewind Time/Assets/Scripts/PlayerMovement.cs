@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
-
     [SerializeField]
     private float sidewaysForce;
     [SerializeField]
