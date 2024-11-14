@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded;
     private bool ridingPlayer;
     private bool pauseMount;
-    private float yVelocity;
+    //private float yVelocity;
 
     public GameObject cloneOverlay;
     public Rigidbody2D rb;
@@ -47,6 +47,8 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(Vector3.down * airGravity);
     }
 
+
+
     void Update()
     {
         if (ridingPlayer)
@@ -55,7 +57,9 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        if (rb.velocity.y < 0 && GroundCheck())
+        bool notFalling = rb.velocity.y < 0;
+
+        if (notFalling && CurrentlyGrounded())
         {
             isFalling = false;
             isGrounded = true;
@@ -64,10 +68,8 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             isFalling = (rb.velocity.y >= 0) ? false : true;
-            isGrounded = (GroundCheck()) ? true : false;
+            isGrounded = (CurrentlyGrounded()) ? true : false;
         }
-
-
 
         atMaxSpeed = (Mathf.Abs(rb.velocity.x) > maxSpeed) ? true : false;
     }
@@ -80,13 +82,16 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        bool movingRight = rb.velocity.x < 0;
+        bool movingLeft = rb.velocity.x > 0;
+
         if (atMaxSpeed)
         {
-            if (rb.velocity.x < 0)
+            if (movingRight)
                 if (direction == Direction.right)
                     rb.AddForce(sidewaysForce * Vector2.right, 0);
 
-            if (rb.velocity.x > 0)
+            if (movingLeft)
                 if (direction == Direction.left)
                     rb.AddForce(sidewaysForce * Vector2.left, 0);
             return;
@@ -112,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
         
-        if (GroundCheck())
+        if (CurrentlyGrounded())
         {
             DoJump();
         }
@@ -126,12 +131,15 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    bool GroundCheck()
+    bool CurrentlyGrounded()
     {
         RaycastHit2D hit = Physics2D.Raycast(new Vector2(GroundCheckPos.position.x, GroundCheckPos.position.y), Vector2.down, 0.2f);
+
         if (hit)
         {
-            if (hit.transform.gameObject.CompareTag("Player"))
+            bool onPlayer = hit.transform.gameObject.CompareTag("Player");
+
+            if (onPlayer)
             {
                 MountPlayer(hit.transform.GetComponent<Transform>());
             }
