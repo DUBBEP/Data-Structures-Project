@@ -1,15 +1,13 @@
 using UnityEngine;
 
-public class Replay
+public class Replay : MonoBehaviour
 {
     private bool isReplaying;
     public bool IsReplaying { get { return isReplaying; } }
     private float replayStartTime;
     private float replayTime;
     private PlayerMovement replayTarget;
-
-
-
+    
     void FixedUpdate()
     {
         if (isReplaying)
@@ -27,9 +25,6 @@ public class Replay
     private void RunReplay()
     {
         replayTime += Time.fixedDeltaTime;
-
-        Debug.Log(CommandLog.recordedCommands.Count);
-
         bool commandsInQueue = CommandLog.recordedCommands.Count > 0;
 
         if (commandsInQueue)

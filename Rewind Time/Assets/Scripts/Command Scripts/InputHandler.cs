@@ -15,8 +15,8 @@ public class InputHandler : MonoBehaviour
 
     private void Start()
     {
-        replay = new();
-        invoker = new();
+        replay = gameObject.AddComponent<Replay>();
+        invoker = gameObject.AddComponent<Invoker>();
     }
 
     void FixedUpdate()
@@ -36,7 +36,7 @@ public class InputHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
             ToggleRecording();
 
-        if (Input.GetKeyDown(KeyCode.P) && CommandLog.recordedCommands.Count > 0)
+        if (Input.GetKeyDown(KeyCode.P) && CommandLog.recordedCommands.Count > 0 && !replay.IsReplaying)
             OnMakeClone?.Invoke(replay);
     }
 

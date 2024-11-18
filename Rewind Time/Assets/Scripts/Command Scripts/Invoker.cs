@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Invoker
+public class Invoker : MonoBehaviour
 {
     private float recordingTime;
     private float replayStartTime;
