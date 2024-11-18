@@ -15,7 +15,8 @@ public class PlayerMovement : MonoBehaviour
     private float airGravity;
     [SerializeField] 
     private float groundGravity;
-
+    [SerializeField]
+    private Transform playerSprite;
 
     [SerializeField]
     private Transform GroundCheckPos;
@@ -26,7 +27,6 @@ public class PlayerMovement : MonoBehaviour
     //private float yVelocity;
 
     private MountBehavior mounter;
-    public GameObject cloneOverlay;
     public Rigidbody2D rb;
 
     private void Awake()
@@ -77,7 +77,6 @@ public class PlayerMovement : MonoBehaviour
             if (movingRight)
                 if (direction == Direction.right)
                     rb.AddForce(sidewaysForce * Vector2.right, 0);
-
             if (movingLeft)
                 if (direction == Direction.left)
                     rb.AddForce(sidewaysForce * Vector2.left, 0);
@@ -85,9 +84,15 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (direction == Direction.left)
+        {
             rb.AddForce(sidewaysForce * Vector2.left, 0);
+            playerSprite.localScale = new Vector3(-1, 1, 1);
+        }
         else if (direction == Direction.right)
+        {
             rb.AddForce(sidewaysForce * Vector2.right, 0);
+            playerSprite.localScale = new Vector3(1, 1, 1);
+        }
     }
 
     public void TryJump()

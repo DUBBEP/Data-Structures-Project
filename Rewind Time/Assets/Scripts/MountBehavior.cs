@@ -6,7 +6,7 @@ public class MountBehavior : MonoBehaviour
 {
 
 
-    private Vector3 offset = new Vector3(0, 1.1f, 0);
+    private Vector3 offset = new Vector3(0, 1.6f, 0);
     private bool pauseMount;
     [HideInInspector]
     public bool ridingPlayer;
