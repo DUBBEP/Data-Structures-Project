@@ -33,10 +33,10 @@ public class InputHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W))
             invoker.ExecuteCommand(new Jump(player));
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && !replay.IsReplaying)
             ToggleRecording();
 
-        if (Input.GetKeyDown(KeyCode.P) && CommandLog.recordedCommands.Count > 0 && !replay.IsReplaying)
+        if (Input.GetKeyDown(KeyCode.P) && CommandLog.recordedCommands.Count > 0 && !replay.IsReplaying && !invoker.IsRecording)
             OnMakeClone?.Invoke(replay);
     }
 

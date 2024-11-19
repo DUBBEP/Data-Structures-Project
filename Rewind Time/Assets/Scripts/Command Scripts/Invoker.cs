@@ -22,7 +22,7 @@ public class Invoker : MonoBehaviour
         {
             command.timeStamp = recordingTime;
             CommandLog.recordedCommands.Enqueue(command);
-
+            CommandLogTracker.Instance.UpdateCountText();
             Debug.Log("Recorded Time: " + command.timeStamp);
         }
     }

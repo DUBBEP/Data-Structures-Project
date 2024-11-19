@@ -35,6 +35,7 @@ public class Replay : MonoBehaviour
             if (replayTime >= command.timeStamp)
             {
                 CommandLog.recordedCommands.Dequeue();
+                CommandLogTracker.Instance.UpdateCountText();
                 command.controller = replayTarget;
                 command.Execute();
             }
